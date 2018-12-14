@@ -13,6 +13,6 @@ path
 passport-google-oauth20
 
 # How to run
-Clone the project and in command line type ```javascript
+Clone the project and in command line type ```
 npm start ``` inside blogger directory.
 
