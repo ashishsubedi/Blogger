@@ -1,7 +1,7 @@
 # ABlogger
 This is my node.js learning project. Here, I am trying to create simple blogging system. The bloggers can register, or sign in with google acount.
 
-#Modules-Used
+# Modules-Used
 Express.js
 http-errors
 body-parser
@@ -11,3 +11,8 @@ mongoose
 morgan
 path
 passport-google-oauth20
+
+# How to run
+Clone the project and in command line type ```javascript
+npm start ``` inside blogger directory.
+
