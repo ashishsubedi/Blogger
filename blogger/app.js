@@ -3,45 +3,42 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+const bodyParser = require('body-parser');
 var passport = require('passport');
-var GoogleStrategy = require('passport-google-oauth20').Strategy;
+const passportSetup = require('./config/passport-setup');
+
+
 var mongoose = require('mongoose');
 
-const keys = require("./config/keys");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
-passport.use(new GoogleStrategy({
-  clientID: keys.googleAuthClientID,
-  clientSecret: keys.googleAuthClientSecret,
-  callbackURL: "/auth/google/callback"
-},
-function(accessToken, refreshToken, profile, cb) {
-  console.log(accessToken);
-}
-));
 
 
 var app = express();
+
+const mongoDB = 'mongodb://127.0.0.1:27017/users';
+const connect = mongoose.connect(mongoDB,{useNewUrlParser:true});
+
+connect.then((db)=>{
+  console.log("Connected to MongoDB Server");
+},(err)=>{console.log(err);})
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+//app.use(passport.initialize());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
-app.get('/auth/google',passport.authenticate('google',{
-  scope: ['profile','email']
-}));
-app.get('/auth/google/callback',passport.authenticate('google'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
