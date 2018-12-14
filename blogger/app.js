@@ -13,10 +13,14 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 passport.use(new GoogleStrategy({
-  clientId: keys.googleAuthClientId,
+  clientID: keys.googleAuthClientID,
   clientSecret: keys.googleAuthClientSecret,
-  callbackURL: ""
-}));
+  callbackURL: "/auth/google/callback"
+},
+function(accessToken, refreshToken, profile, cb) {
+  console.log(accessToken);
+}
+));
 
 
 var app = express();
@@ -34,6 +38,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
+app.get('/auth/google',passport.authenticate('google',{
+  scope: ['profile','email']
+}));
+app.get('/auth/google/callback',passport.authenticate('google'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
