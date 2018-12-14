@@ -5,7 +5,7 @@ block content
     .jumbotron
       h1 Welcome to #{title}
       if user
-        h1 Welcome, #{user.fullName}
+        h1 Welcome, #{user.name}
         form(action="/users/logout" method="POST")
         button(type="submit").btn.btn-default#logout Logout
       else

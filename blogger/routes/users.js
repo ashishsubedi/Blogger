@@ -57,9 +57,8 @@ router.get('/google',passport.authenticate('google',{
   scope: ['profile','email']
 }));
 router.get('/google/callback',passport.authenticate('google'),(req,res)=>{
-  //Add User to database
-  console.log("Works");
-  
+
+  res.redirect('/profile');
 });
 
 

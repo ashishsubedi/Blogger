@@ -6,6 +6,7 @@ var logger = require('morgan');
 const bodyParser = require('body-parser');
 var passport = require('passport');
 const passportSetup = require('./config/passport-setup');
+const cookieSession = require("cookie-session");
 
 
 var mongoose = require('mongoose');
@@ -13,7 +14,9 @@ var mongoose = require('mongoose');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var profileRouter = require('./routes/profile');
 
+const keys = require("./config/keys");
 
 
 var app = express();
@@ -34,10 +37,18 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-//app.use(passport.initialize());
+
+app.use(cookieSession({
+  maxAge: 24*60*60*100,
+  keys: keys.session.keys
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
+app.use('/profile', profileRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
