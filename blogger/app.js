@@ -3,10 +3,21 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var passport = require('passport');
+var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var mongoose = require('mongoose');
+
+const keys = require("./config/keys");
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+
+passport.use(new GoogleStrategy({
+  clientId: keys.googleAuthClientId,
+  clientSecret: keys.googleAuthClientSecret,
+  callbackURL: ""
+}));
+
 
 var app = express();
 
