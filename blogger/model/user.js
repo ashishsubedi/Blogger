@@ -29,7 +29,15 @@ const userSchema = new Schema({
     admin:{
         type:Boolean,
         default:false
-    }
+    },
+    isDeleted:{
+        type: Boolean,
+        default:false
+    },
+    _userPosts:[{
+        type: Schema.ObjectId,
+        ref: 'Post'
+    }]
 },{
     timestamps: true
 });

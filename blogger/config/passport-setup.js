@@ -1,16 +1,19 @@
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-const User = require('../model/user');
+//const User = require('../model/userModel');
+
+const userInfo = {};
 
 passport.serializeUser((user,done)=>{
 	done(null,user.id);
 });
 
 passport.deserializeUser((id,done)=>{
-	User.findById(id).then((user)=>{
+	//User.findById(id).then((user)=>{
+    const user = userInfo[id];
 		done(null,user);
-	});	
+	//});	
 });
 const keys = require("./keys");
 
@@ -20,12 +23,14 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:3000/users/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-
-    User.findOne({
+    userInfo[profile.id] = profile;
+    done(null,profile); 
+    /* User.findOne({
       googleid: profile.id
     },(err,user)=>{
       if(err) return done(err);
       if(!user){
+        //If password matches default password, give them option to change them and username
         User.create({
           googleid: profile.id,
           name : profile.displayName,
@@ -34,13 +39,15 @@ passport.use(new GoogleStrategy({
           password: "defaultPasswordWillEncodeLater" 
         })
         .then((newUser)=>{
-            done(null,newUser);
+            done(null,newUser); 
         });
       }else{
         done(null,user)
       }
     })
-    .catch(err=>done(err)); 
+    .catch(err=>done(err));  */
   }
 	
 ));
+
+

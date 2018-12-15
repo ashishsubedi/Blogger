@@ -3,35 +3,26 @@ var mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    googleid : {
-        type: String,
-        default: ""
-    },
-    name :{
+    title:{
         type: String,
         required: true
     },
-    username:{
-        type: String,
-        required: true,
-        unique: true,
-        minlenghth: [6,"Too Short"]
+    text: {
+        type :String,
+        required:true
     },
-    password:{
-        type:String,
-        required:true,
-        minlength: [8,"Too Short"]
+    createdAt:{
+        type: Date,
+        default: Date.now()
     },
-    email : {
-        type: String,
-        required: true
+    isDeleted:{
+        type: Boolean,
+        default: false
     },
-    admin:{
-        type:Boolean,
-        default:false
+    _createrId:{
+        type: Schema.ObjectId,
+        ref : 'User'
     }
-},{
-    timestamps: true
 });
 
 const User = mongoose.model("User", userSchema);

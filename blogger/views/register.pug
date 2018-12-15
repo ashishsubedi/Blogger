@@ -10,13 +10,13 @@ block content
                 form(method='POST' action='/users/register' oninput='confirmPassword.setCustomValidity(confirmPassword.value != password.value ? "Passwords do not match." : "")')
                     div.form-group
                         label(for='name') Name:
-                        input#name.form-control(type='text', placeholder='Full Name' name='name' required='required')
+                        input#name.form-control(type='text', placeholder='Full Name' name='name' value=fullName required='required')
                     div.form-group
                         label(for='email') Email:
-                        input#email.form-control(type='email', placeholder='Email' name='email' required='required')
+                        input#email.form-control(type='email', placeholder='Email' name='email' value=email required='required')
                     div.form-group
                         label(for='username') Username:
-                        input#username.form-control(type='text', placeholder='Username' name='username' required='required')
+                        input#username.form-control(type='text', placeholder='Username' name='username'  required='required')
                     div.form-group
                         label(for='password') Password:
                         input#password.form-control(type='password' name='password' required='required')
@@ -25,4 +25,5 @@ block content
                         input#confirmPassword.form-control(type='password' name='confirmPassword' required='required')
                     button.btn.btn-primary(type='submit') Sign up
    
+
     
