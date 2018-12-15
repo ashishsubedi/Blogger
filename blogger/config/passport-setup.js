@@ -1,7 +1,7 @@
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 
-const User = require('../model/users');
+const User = require('../model/user');
 
 passport.serializeUser((user,done)=>{
 	done(null,user.id);
@@ -10,10 +10,8 @@ passport.serializeUser((user,done)=>{
 passport.deserializeUser((id,done)=>{
 	User.findById(id).then((user)=>{
 		done(null,user);
-	});
-	
+	});	
 });
-
 const keys = require("./keys");
 
 passport.use(new GoogleStrategy({
@@ -22,30 +20,27 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:3000/users/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    console.log(profile);
+
     User.findOne({
       googleid: profile.id
-    }).then((user)=>{
-      if(user){
-        //User Exist, redirect to login
-        done(null,user);
-        
-      }else{
-		//Save to database
-		
-        return User.create({
+    },(err,user)=>{
+      if(err) return done(err);
+      if(!user){
+        User.create({
           googleid: profile.id,
-			name : profile.displayName,
-			username : (profile.name.givenName + profile.id),
-			email: profile.emails[0].value,
-			password: "defaultPasswordWillEncodeLater" });  
+          name : profile.displayName,
+          username : (profile.name.givenName + profile.id),
+          email: profile.emails[0].value,
+          password: "defaultPasswordWillEncodeLater" 
+        })
+        .then((newUser)=>{
+            done(null,newUser);
+        });
+      }else{
+        done(null,user)
       }
     })
-	.then((user)=>{
-		done(null,user);
-	},err=>console.log(err))
-	.catch(err=>console.log(err)); 
-
+    .catch(err=>done(err)); 
   }
 	
 ));

@@ -18,11 +18,13 @@ var profileRouter = require('./routes/profile');
 
 const keys = require("./config/keys");
 
-
 var app = express();
 
 const mongoDB = 'mongodb://127.0.0.1:27017/users';
-const connect = mongoose.connect(mongoDB,{useNewUrlParser:true});
+const connect = mongoose.connect(mongoDB,{
+  useNewUrlParser:true,
+  useCreateIndex:true
+});
 
 connect.then((db)=>{
   console.log("Connected to MongoDB Server");

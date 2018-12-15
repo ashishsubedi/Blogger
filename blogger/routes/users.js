@@ -5,8 +5,8 @@ var passport = require('passport');
 
 const bodyParser = require('body-parser');
 
-var mongoose = require('mongoose');
-const User = require("../model/users");
+const registerController = require("../controller/registerController");
+const loginController = require("../controller/loginController");
 
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true }));
@@ -15,52 +15,32 @@ router.use(bodyParser.urlencoded({ extended: true }));
 router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
-router.get('/register',(req,res,next)=>{
-    res.render("register");
-})
-router.post('/register',(req,res,next)=>{
 
-  User.findOne({$or:[
-    {username : req.body.username},{email: req.body.email}
-  ]})
-  .then((user)=>{
-    if(user != null){
-      var err = new Error("User already exists!");
-      err.status = 403;
-      next(err);
-    }
-    else{
-      return User.create({
-        name : req.body.name,
-        username : req.body.username,
-        password: req.body.password,
-        email: req.body.email });     
-    }  
-  })
-  .then((user)=>{
-    res.statusCode = 200;
-    res.setHeader('Content-Type','text/html');
-    res.redirect('/users/login');
-  },(err)=>next(err))
-  .catch(err => next(err));
-});
+//Handle registration
+router.get('/register',registerController.get);
+router.post('/register',registerController.post);
 
-router.get('/login',(req,res,next)=>{
-  res.render("login");
-})
-router.post('/login',(req,res,next)=>{
-res.end("user authenticated");
-})
 
+//Handle Login
+router.get('/login',loginController.get);
+router.post('/login',loginController.post);
+
+//Handle google sign In 
 
 router.get('/google',passport.authenticate('google',{
-  scope: ['profile','email']
-}));
-router.get('/google/callback',passport.authenticate('google'),(req,res)=>{
+    scope: ['profile','email']
+  }
+));
+router.get('/google/callback',passport.authenticate('google', { failureRedirect: '/users/login' }),(req,res)=>{
+    console.log("REq :"+ req );
+    res.status(200).redirect('/profile');
+  }
+);
 
-  res.redirect('/profile');
+//Handle Logout
+router.post('/logout',(req,res)=>{
+  req.logout();
+  res.redirect('/');
 });
-
-
 
 module.exports = router;
