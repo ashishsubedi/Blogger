@@ -20,7 +20,7 @@ const keys = require("./config/keys");
 
 var app = express();
 
-const mongoDB = 'mongodb://127.0.0.1:27017/users';
+const mongoDB = keys.mongoDB.connectionString;
 const connect = mongoose.connect(mongoDB,{
   useNewUrlParser:true,
   useCreateIndex:true

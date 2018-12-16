@@ -3,33 +3,48 @@ var mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const userSchema = new Schema({
-    googleid : {
+    method:{
         type: String,
-        default: ""
+        enum: ['local','google']
     },
-    name :{
-        type: String,
-        required: true
+    
+    local:{
+        password:{
+            type:String,
+            minlength: [8,"Too Short"]
+        },
+        email : {
+            type: String,
+        },
+        username:{
+            type: String,
+        },
+        name :{
+            type: String, 
+        },
+        admin:{
+            type:Boolean,
+            default:false
+        }
+
     },
-    username:{
-        type: String,
-        required: true,
-        unique: true,
-        minlenghth: [6,"Too Short"]
+    google:{
+        googleid : {
+            type: String,
+        },  
+        email : {
+            type: String,
+        },
+        name :{
+            type: String, 
+        },
+        admin:{
+            type:Boolean,
+            default:false
+        }
     },
-    password:{
-        type:String,
-        required:true,
-        minlength: [8,"Too Short"]
-    },
-    email : {
-        type: String,
-        required: true
-    },
-    admin:{
-        type:Boolean,
-        default:false
-    },
+    
+    
     isDeleted:{
         type: Boolean,
         default:false

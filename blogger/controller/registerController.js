@@ -3,7 +3,7 @@ const registerController = {};
 registerController.post = (req,res,next)=>{
 
     User.findOne({$or:[
-      {username : req.body.username},{email: req.body.email}
+      {'local.username' : req.body.username},{'local.email': req.body.email}
     ]})
     .then((user)=>{
       if(user != null){
@@ -13,10 +13,14 @@ registerController.post = (req,res,next)=>{
       }
       else{
         return User.create({
-          name : req.body.name,
-          username : req.body.username,
-          password: req.body.password,
-          email: req.body.email });     
+          local:{
+            name : req.body.name,
+            username : req.body.username,
+            password: req.body.password,
+            email: req.body.email 
+
+          }
+        });     
       }  
     })
     .then((user)=>{

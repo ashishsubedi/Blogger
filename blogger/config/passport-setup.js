@@ -1,19 +1,18 @@
 var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
+var LocalStrategy = require('passport-local').Strategy;
 
-//const User = require('../model/userModel');
+const User = require('../model/user');
 
-const userInfo = {};
-
-passport.serializeUser((user,done)=>{
-	done(null,user.id);
+passport.serializeUser(function(user, cb) {
+  cb(null, user.id);
 });
 
-passport.deserializeUser((id,done)=>{
-	//User.findById(id).then((user)=>{
-    const user = userInfo[id];
-		done(null,user);
-	//});	
+passport.deserializeUser(function(id, cb) {
+  User.findById(id, function (err, user) {
+    if (err) { return cb(err); }
+    cb(null, user);
+  });
 });
 const keys = require("./keys");
 
@@ -23,9 +22,8 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:3000/users/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
-    userInfo[profile.id] = profile;
-    done(null,profile); 
-    /* User.findOne({
+ 
+    User.findOne({
       googleid: profile.id
     },(err,user)=>{
       if(err) return done(err);
@@ -45,9 +43,25 @@ passport.use(new GoogleStrategy({
         done(null,user)
       }
     })
-    .catch(err=>done(err));  */
+    .catch(err=>done(err)); 
   }
-	
+));
+
+passport.use(new LocalStrategy(
+  function(username, password, done) {
+    User.findOne({$or:[
+      {'local.username' :  username},{'local.email': username}
+    ]})
+    .then(  user => {
+      if (!user) { return done(null, false); }
+      if (user.local.password !== password ) { return done(null, false); }
+      done(null, user);
+    })
+    .catch(err=>{
+      done(err)
+    });
+
+  }
 ));
 
 

@@ -25,7 +25,7 @@ router.post('/register',registerController.post);
 
 //Handle Login
 router.get('/login',loginController.get);
-router.post('/login',loginController.post);
+router.post('/login',passport.authenticate('local'),loginController.post);
 
 //Handle google sign In 
 
@@ -34,12 +34,12 @@ router.get('/google',passport.authenticate('google',{
   }
 ));
 router.get('/google/callback',passport.authenticate('google', { failureRedirect: '/users/login' }),(req,res,next)=>{
-    if(validator.findGoogleUserOrCreate){
+      req.user = validator.findGoogleUserOrCreate;
       res.status(200).redirect('/profile');
 
     }
     
-  }
+  
 );
 
 //Handle Logout

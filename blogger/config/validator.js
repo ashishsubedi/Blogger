@@ -1,4 +1,4 @@
-const User = require('../model/userModel');
+const User = require('../model/user');
 
 const validator = {};
 
@@ -18,12 +18,15 @@ validator.findGoogleUserOrCreate = (req,res,next)=>{
            }
           })
           .then((newUser)=>{
-              return true 
+              console.log("FUNCTION:");
+              console.log(newUser);
+              return newUser 
           });
         }
         else{
-
-            return true; 
+            console.log("FUNCTION 2:");
+              console.log(user);
+            return user; 
         }
       })
       .catch(err=>next(err));
