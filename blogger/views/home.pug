@@ -1,0 +1,9 @@
+extends layout
+
+block content
+  .main.container
+        h1.display-4.m-b-2 Posts
+        .contents
+            ul
+                each val in posts
+                    li  = val

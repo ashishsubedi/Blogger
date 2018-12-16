@@ -2,14 +2,14 @@ var passport = require('passport');
 var GoogleStrategy = require('passport-google-oauth20').Strategy;
 var LocalStrategy = require('passport-local').Strategy;
 
-const User = require('../model/user');
+const db = require('../model');
 
 passport.serializeUser(function(user, cb) {
   cb(null, user.id);
 });
 
 passport.deserializeUser(function(id, cb) {
-  User.findById(id, function (err, user) {
+  db.User.findById(id, function (err, user) {
     if (err) { return cb(err); }
     cb(null, user);
   });
@@ -23,13 +23,13 @@ passport.use(new GoogleStrategy({
   },
   function(accessToken, refreshToken, profile, done) {
  
-    User.findOne({
+    db.User.findOne({
       googleid: profile.id
     },(err,user)=>{
       if(err) return done(err);
       if(!user){
         //If password matches default password, give them option to change them and username
-        User.create({
+        db.User.create({
           googleid: profile.id,
           name : profile.displayName,
           username : (profile.name.givenName + profile.id),
@@ -49,7 +49,7 @@ passport.use(new GoogleStrategy({
 
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    User.findOne({$or:[
+    db.User.findOne({$or:[
       {'local.username' :  username},{'local.email': username}
     ]})
     .then(  user => {

@@ -6,11 +6,9 @@ loginController.post = (req,res,next)=>{
    console.log("HEE");
 
    console.log(req.user);
-    if(req.user){
-        res.end("Login Successfull");
-    }else{
-        res.end("Login Failed")
-    }
+   
+    res.redirect('/profile');
+    
 
       
 };

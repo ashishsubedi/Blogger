@@ -1,4 +1,6 @@
 const registerController = {};
+const User = require("../model/user");
+
 
 registerController.post = (req,res,next)=>{
 

@@ -2,9 +2,9 @@
 const User = require("./user");
 const Post = require("./post");
 
-const model = {
+const db = {
     User,
     Post
 };
 
-module.exports = model;
+module.exports = db;

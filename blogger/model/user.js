@@ -50,7 +50,7 @@ const userSchema = new Schema({
         default:false
     },
     _userPosts:[{
-        type: Schema.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Post'
     }]
 },{

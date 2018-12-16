@@ -1,0 +1,15 @@
+extends layout
+
+block content
+  .main.container
+    .row
+      .col-md-12
+        h1.display-4.m-b-2 Blog Post
+        form(method='POST' action='/profile/post')
+          label(for='title') Add Post 
+          br
+          input.form-control(type='text' id='title' placeholder='title' name='title')
+          br
+          textarea(id="textArea" name="textArea" style="{width: 100%}")
+          br
+          button.btn.btn-primary(type='submit') Post
